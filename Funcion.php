@@ -249,31 +249,27 @@ class Funcion
 
    /*-------------------------- ESCRIBIR EN BD --------------------------*/
 
-   public static function insertArray($tabla, $valores = array())
+   public static function insertArray($tabla, $datos = array())
    {
       global $con;
       $columnas = Funcion::getFields($tabla);
-      if (isset($columnas) && $columnas != '' && isset($valores) && $valores != ''){
-         $i = 0;
-         foreach ($valores as $key => $value) {
-            if ($key != $columnas['info'][$i]) return false;
-            $i++;
-         }
+      if (isset($columnas) && $columnas != ''){
          unset($columnas['info'][0]);
-         $borrar = true;
-         foreach ($valores as $n => $dat) {
-            if ($n == 0 && $borrar) {
-               unset($valores[$n]);
-               $borrar = false;
-            } else {
-               $valores[$n] = "'".$dat."'";
+         foreach ($datos as $key => $value) {
+            $esta = false;
+            foreach ($columnas['info'] as $c) {
+               if ($c == $key) $esta = true;
+            }
+            if ($esta) {
+               $cols[] = $key;
+               $vals[] = "'".$value."'";
             }
          }
-         $columnas = implode(', ', $columnas['info']);
-         $valores = implode(', ', $valores);
+         $cols = implode(', ', $cols);
+         $vals = implode(', ', $vals);
       }
       try {
-         $stmt = $con->prepare("INSERT INTO $tabla ($columnas) VALUES ($valores)");
+         $stmt = $con->prepare("INSERT INTO $tabla ($cols) VALUES ($vals)");
          $stmt->execute();
          $stmt->closeCursor();
          return true;
@@ -281,7 +277,7 @@ class Funcion
          return false;
       }
    }
-   
+
    // update
    // updateElement
 
