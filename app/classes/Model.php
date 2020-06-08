@@ -1,6 +1,6 @@
 <?php
 
-class Model extends Db
+class Model
 {
     public static function exists($table, $params = [])
     {
@@ -15,7 +15,7 @@ class Model extends Db
         }
         $sql .= ' LIMIT 1';
         try {
-            if (parent::query($sql, $params)) return true;
+            if (Db::query($sql, $params)) return true;
             return false;
         } catch (Exception $e) {
             return false;
@@ -35,7 +35,7 @@ class Model extends Db
         }
         $sql .= ' LIMIT 1';
         try {
-            $result = parent::query($sql, $params);
+            $result = Db::query($sql, $params);
             return new $class($result[0]);
         } catch (Exception $e) {
             return false;
@@ -54,7 +54,7 @@ class Model extends Db
             }
         }
         try {
-            $result = parent::query($sql, $params);
+            $result = Db::query($sql, $params);
             foreach ($result as $res) {
                 $list[] = new $class($res);
             }
@@ -82,7 +82,7 @@ class Model extends Db
         }
         $sql .= ')';
         try {
-            $result = parent::query($sql, $data);
+            $result = Db::query($sql, $data);
             return $result;
         } catch (Exception $e) {
             return $e->getMessage();
@@ -114,7 +114,7 @@ class Model extends Db
             $sql .= implode(' AND ', $conditions);
         }
         try {
-            $result = parent::query($sql, $data);
+            $result = Db::query($sql, $data);
             return $result;
         } catch (Exception $e) {
             return $e->getMessage();
@@ -138,7 +138,7 @@ class Model extends Db
             $sql .= implode(' AND ', $conditions);
         }
         try {
-            $result = parent::query($sql);
+            $result = Db::query($sql);
             return $result;
         } catch (Exception $e) {
             return $e->getMessage();
